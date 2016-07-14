@@ -1,6 +1,10 @@
 package com.l2l.androided.mh122354.doodle;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +12,9 @@ import android.hardware.SensorManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -122,7 +129,121 @@ public class MainActivityFragment extends Fragment {
             };
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu,inflater);
+        //display menu
+        inflater.inflate(R.menu.doodle_fragment_menu,menu);
+    }
 
+    @Override
+    public boolean onOptionItemsSelected(MenuItem item){
+
+        switch(item.getItemId()){
+            case R.id.color:
+                ColorDialogFragment colorDialog = new ColorDialogFragment();
+                colorDialog.show(getFragmentManager(),"color dialog");
+                return true;
+
+            case R.id.line_width:
+                LineDialogFragment lineDialog=new LineDialogFragment();
+                lineDialog.show(getFragmentManager(),"line dialog");
+                return true;
+
+            case R.id.delete_drawing:
+                confirmErase();
+                return true;
+
+            case R.id.save:
+                saveImage();
+                return true;
+
+            case R.id.print:
+                doodleView.printImage();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void saveImage(){
+
+
+        //check to see if app doesn't have permission needed
+        if(getContext().checkSelfPermission(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)!=
+                PackageManager.PERMISSION_GRANTED){
+
+
+            //show an explanation of why permission is needed
+            if(shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+                AlertDialog.Builder builder=
+                        new AlertDialog.Builder(getActivity());
+
+                builder.setMessage(R.string.permission_explanation);
+
+                //add an ok button to the dialog
+                builder.setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener(){
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which){
+
+
+                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                        SAVE_IMAGE_REQUEST_CODE);
+                            }
+
+                        }
+                );
+                builder.create().show();
+            }
+            else{
+                //no dialog, request permission
+                requestPermissions(
+                        new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        SAVE_IMAGE_REQUEST_CODE);
+                        }
+
+            }
+            //if app already has permission
+            else{
+            doodleView.saveImage();
+        }
+
+        }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                          int[] grantResults){
+
+
+        switch(requestCode){
+            //choose appropriate action based on which feature asked for permission
+            case SAVE_IMAGE_REQUEST_CODE:
+                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    doodleView.saveImage();
+                    return;
+                }
+        }
+
+    }
+
+    public DoodleView getDoodleView(){
+        return doodleView;
+    }
+
+    public void setDialogOnScreen(boolean visible){
+        dialogOnScreen=visible;
+    }
 
 
 }
+
+
+
+
+
+
