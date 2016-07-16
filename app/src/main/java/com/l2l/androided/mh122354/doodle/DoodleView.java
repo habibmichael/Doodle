@@ -36,7 +36,7 @@ public class DoodleView extends View {
 
     //Maps of current paths being drawn
     private final Map<Integer, Path> pathMap = new HashMap<>();
-    private final Map<Integer, Path> previousPointMap = new HashMap<>();
+    private final Map<Integer, Point> previousPointMap = new HashMap<>();
 
 
     public DoodleView(Context context, AttributeSet attrs) {

@@ -117,10 +117,6 @@ public class MainActivityFragment extends Fragment {
                     }
                 }
 
-                private void confirmErase(){
-                    EraseDialogFragment fragment = new EraseDialogFragment();
-                    fragment.show(getFragmentManager(),"erase dialog");
-                }
 
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int i) {
@@ -137,7 +133,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionItemsSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item){
 
         switch(item.getItemId()){
             case R.id.color:
@@ -163,6 +159,11 @@ public class MainActivityFragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmErase(){
+        EraseDialogFragment fragment = new EraseDialogFragment();
+        fragment.show(getFragmentManager(),"erase dialog");
     }
 
     private void saveImage(){
