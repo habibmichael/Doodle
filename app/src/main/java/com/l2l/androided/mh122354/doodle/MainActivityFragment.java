@@ -31,7 +31,7 @@ public class MainActivityFragment extends Fragment {
     //constant used to determine a shake on device
     private static final int ACCELERATION_THRESHOLD=10000;
 
-    //used to indentify the request for saving
+    //used to identify the request for saving
     private static final int SAVE_IMAGE_REQUEST_CODE=1;
 
     public MainActivityFragment() {
@@ -43,6 +43,8 @@ public class MainActivityFragment extends Fragment {
          View view =inflater.inflate(R.layout.fragment_main, container, false);
 
         setHasOptionsMenu(true);
+
+        doodleView = (DoodleView)view.findViewById(R.id.doodleView);
 
         //acceleration values
         acceleration=0;
